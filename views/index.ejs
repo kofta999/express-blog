@@ -1,0 +1,34 @@
+<div class="author">
+  <h1 class="author__heading">Hi, I'm Mostafa.</h1>
+  <p class="author__body">Computer Engineering Student and Web Developer</p>
+
+  <img
+    src="/img/hero-image.webp"
+    alt="person looking out through a window"
+    class="hero-image"
+    width="981"
+    height="528"
+  />
+</div>
+
+<section class="articles">
+  <h2 class="articles__heading">Latest Posts</h2>
+  <ul class="article-ul">
+    <% for(const post of posts) { %>
+
+    <li>
+      <a href="/post/<%= post._id %>">
+        <span><%= post.title %></span>
+        <span class="article-list__date"
+          ><%= post.createdAt.toDateString() %></span
+        >
+      </a>
+    </li>
+
+    <% } %>
+  </ul>
+
+  <% if (nextPage !== null) { %>
+  <a href="/?page=<%= nextPage %>" class="pagination">&lt; View older posts</a>
+  <% } %>
+</section>
