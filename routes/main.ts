@@ -18,6 +18,7 @@ router.get("/", async (req, res, next) => {
     const hasNextPage = nextPage <= Math.ceil(count / perPage);
 
     res.render("index", {
+      title: "Mostafa's Blog",
       posts,
       current: page,
       nextPage: hasNextPage ? nextPage : null,
@@ -30,7 +31,25 @@ router.get("/", async (req, res, next) => {
 router.get("/post/:postId", async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.postId);
-    res.render("post", { post });
+    res.render("post", { title: post?.title, post });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+router.post("/search", async (req, res, next) => {
+  try {
+    let searchTerm = req.body.searchTerm as string;
+    const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z0-9]/g, "");
+
+    const posts = await Post.find({
+      $or: [
+        { title: { $regex: new RegExp(searchNoSpecialChar, "i") } },
+        { body: { $regex: new RegExp(searchNoSpecialChar, "i") } },
+      ],
+    });
+
+    res.render("search", { posts, title: "Search" });
   } catch (error) {
     console.error(error);
   }
